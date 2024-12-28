@@ -262,7 +262,7 @@ func (c *Client) getStreamInfo() (err error) {
 	if c.Name == "" {
     c.Name = "Galaksija" // Postavljanje imena na "Galaksija"
     prompt := promptui.Prompt{
-        Label:    "Enter stream name: ",
+        Label:    "Galaksija: ",
         Validate: validate,
     }
 
