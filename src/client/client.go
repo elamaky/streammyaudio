@@ -260,17 +260,18 @@ func (c *Client) getStreamInfo() (err error) {
 	}
 
 	if c.Name == "" {
-		prompt := promptui.Prompt{
-			Label:    "Enter stream name: ",
-			Validate: validate,
-		}
+    c.Name = "Galaksija" // Postavljanje imena na "Galaksija"
+    prompt := promptui.Prompt{
+        Label:    "Enter stream name: ",
+        Validate: validate,
+    }
 
-		c.Name, err = prompt.Run()
-		if err != nil {
-			return
-		}
+    c.Name, err = prompt.Run()
+    if err != nil {
+        return
+    }
+}
 
-	}
 
 	if c.Quality < 0 || c.Quality > 9 {
 		prompt2 := promptui.Select{
