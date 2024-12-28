@@ -1,26 +1,27 @@
-# Start from a base image
-FROM golang:1.20 AS build
+# Osnovna slika, koristiš sliku sa Python-om ili Go-om, zavisno od aplikacije
+FROM golang:1.20 AS builder
 
-# Set working directory
+# Instalacija potrebnih paketa
+RUN apt-get update && apt-get install -y \
+    ffmpeg \
+    curl \
+    unzip \
+    && rm -rf /var/lib/apt/lists/*
+
+# Postavljanje radnog direktorijuma
 WORKDIR /app
 
-# Install ffmpeg
-RUN apt-get update && apt-get install -y ffmpeg
-
-# Copy source code
+# Dodaj fajlove iz lokalnog direktorijuma u Docker kontejner
 COPY . .
 
-# Build the application
-RUN GOOS=windows GOARCH=amd64 go build -v -o streammyaudio.exe
+# Kompajliranje aplikacije
+RUN GOOS=linux GOARCH=amd64 go build -v -o streammyaudio.exe
 
-# Final stage - use a smaller base image
-FROM debian:bullseye-slim
+# Setovanje imena strima kao ENV varijabla
+ENV STREAM_NAME=Galaksija
 
-# Copy the built app
-COPY --from=build /app/streammyaudio.exe /streammyaudio.exe
+# Otvoreni portovi koje aplikacija koristi
+EXPOSE 8000-10000
 
-# Expose the port your application listens on
-EXPOSE 8000
-
-# Command to run the application
-CMD ["./streammyaudio.exe"]
+# Startovanje aplikacije
+CMD ["./streammyaudio", "Galaksija", "--port", "10000"]
